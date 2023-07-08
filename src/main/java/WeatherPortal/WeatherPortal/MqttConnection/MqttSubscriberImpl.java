@@ -74,6 +74,8 @@ public class MqttSubscriberImpl extends MqttConfig implements MqttCallback {
     // Handle message arrival form MQTT side, not from cosumer side.
     @Override
     public void messageArrived(String mqttTopic, MqttMessage mqttMessage) throws Exception {
+
+        // Here, we need to send the message to all devices after we apply the necessary modification
         String time = new Timestamp(System.currentTimeMillis()).toString();
         System.out.println("***********************************************************************");
         System.out.println("Message Arrived at Time: " + time + "  Topic: " + mqttTopic + "  Message: "
@@ -86,7 +88,7 @@ public class MqttSubscriberImpl extends MqttConfig implements MqttCallback {
 
     }
 
-    // Subscribe a new message to MQTT brocker
+    // Subscribe a new message to MQTT broker
     public void subscribeMessage(String topic) {
         try {
             this.mqttClient.subscribe(topic, this.qos);

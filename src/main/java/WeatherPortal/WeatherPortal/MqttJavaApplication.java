@@ -1,5 +1,6 @@
 package WeatherPortal.WeatherPortal;
 
+import WeatherPortal.WeatherPortal.MqttConnection.MqttSubscriberImpl;
 import org.apache.logging.log4j.message.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -23,15 +24,33 @@ public class MqttJavaApplication extends SpringBootServletInitializer {
     @Autowired
     Runnable MessageListener;
 
+    @Autowired
+    MqttSubscriberImpl subscriber;
 
+    @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return builder.sources(MqttJavaApplication.class);
+
     }
 
     public static void main(String[] args) {
         SpringApplication.run(MqttJavaApplication.class, args);
     }
 
+    @Bean
+    public CommandLineRunner schedulingRunner(TaskExecutor taskExecutor) {
+
+
+        return new CommandLineRunner() {
+            @Override
+            public void run(String... args) throws Exception {
+                while (true) {
+                    subscriber.subscribeMessage("weather-data-test");
+                }
+                // taskExecutor.execute(MessageListener);
+            }
+        };
+    }
 
 
 }
